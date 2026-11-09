@@ -1,0 +1,102 @@
+#+TITLE: Org Babel Agent Skills & Reference Library
+#+AUTHOR:   ECA Pair Programming Assistant
+#+DATE: [2025-05-18 Sun]
+#+OPTIONS: toc:2 num:t ^:{}
+#+STARTUP: overview
+
+* Overview
+
+This directory contains a curated reference library and a modular suite of *AI Agent Skills* for authoring, running, and publishing computational notebooks, multi-language data analysis pipelines, and literate programming documents using *Emacs Org Mode* and *Org Babel*.
+
+The skills are structured according to the Agent Skills specification (=skills/<skill-name>/SKILL.md=) and can be loaded directly by coding assistants (such as ECA, Claude, and Cursor) or consulted as practical human engineering guides.
+
+* Repository Structure
+
+#+BEGIN_EXAMPLE
+org-babel-skill/
+├── README.org                          # This documentation file
+│
+├── skills/                             # Modular Agent Skills directory
+│   ├── org-babel-notebook/SKILL.md     # Core: Computational notebooks in Org Mode
+│   ├── org-babel-polyglot/SKILL.md     # Multi-language data pipelines & :var
+│   ├── org-babel-literate-tangle/SKILL.md # Literate programming & tangling (:tangle)
+│   ├── org-babel-r/SKILL.md            # R, ESS, statistical modeling & graphics
+│   └── org-babel-shell/SKILL.md        # Shell, Bash, async tasks & remote TRAMP
+│
+└── Source Reference Documentation/     # Upstream source materials
+    ├── ORGSOURCE.md                    # Working with Source Code (Org Manual Ch 16 summary)
+    ├── ORGBABEL.md                     # Introducing Babel (Worg by Schulte, Davison, Dye)
+    ├── ORGMANUAL.md                    # Comprehensive Org Mode manual reference
+    ├── R Source Code Blocks in Org Mode.md # Worg guide for R & ESS integration
+    └── Shell Code Blocks in Babel.md   # Worg guide for Shell/Bash scripting
+#+END_EXAMPLE
+
+* Agent Skills Catalog
+
+The =skills/= directory houses five specialized skills:
+
+| Skill | Path | Description |
+|---|---|---|
+| *org-babel-notebook* | [[file:skills/org-babel-notebook/SKILL.md][skills/org-babel-notebook/SKILL.md]] | Primary guide to designing interactive computational notebooks, block anatomy, execution lifecycles, =:results= formatting, graphics rendering, and document export. |
+| *org-babel-polyglot* | [[file:skills/org-babel-polyglot/SKILL.md][skills/org-babel-polyglot/SKILL.md]] | Inter-language data exchange via =:var=, passing Org tables/lists, table formulas with =org-sbe=, programmatic calls with =#+CALL:=, and post-processing with =:post=. |
+| *org-babel-literate-tangle* | [[file:skills/org-babel-literate-tangle/SKILL.md][skills/org-babel-literate-tangle/SKILL.md]] | Donald Knuth's Literate Programming in Org Mode. Extracting code files (=:tangle=), assembling modules with Noweb (=<<...>>=), whitespace handling, and headless batch compilation. |
+| *org-babel-r* | [[file:skills/org-babel-r/SKILL.md][skills/org-babel-r/SKILL.md]] | Data science and statistics with R and ESS (Emacs Speaks Statistics). Covers interactive stepping, the ggplot2/lattice grid graphics rule, device headers, TikZ export, and the =ascii= / =xtable= packages. |
+| *org-babel-shell* | [[file:skills/org-babel-shell/SKILL.md][skills/org-babel-shell/SKILL.md]] | Shell scripting and DevOps automation (Bash, Zsh, Sh, Fish, Dash). Covers non-blocking background jobs (=:async yes=), standard input piping (=:stdin=), command-line args (=:cmdline=), and remote server management over SSH via TRAMP (=:dir=). |
+
+* Source Documentation
+
+The documentation in this folder provides exhaustive upstream knowledge drawn from the official Org Mode manual and Worg documentation:
+
+- *[[file:ORGSOURCE.md][ORGSOURCE.md]]*: A condensed, high-yield summary of Chapter 16 of the Org Manual ("Working with Source Code"). Synthesizes block structures, evaluation rules, result handling modes, tangling, Noweb expansion, security settings, and keybindings.
+- *[[file:ORGBABEL.md][ORGBABEL.md]]*: The foundational paper / Worg guide /Introducing Babel/ by Eric Schulte, Dan Davison, and Tom Dye. Covers Babel's data path, code blocks as functions, and multi-language interoperability.
+- *[[file:ORGMANUAL.md][ORGMANUAL.md]]*: The authoritative reference manual for Org Mode.
+- *[[file:R Source Code Blocks in Org Mode.md][R Source Code Blocks in Org Mode.md]]*: Dedicated Worg guide detailing R integration with Org Mode, graphics device parameters, LaTeX export, and interactive debugging via ESS.
+- *[[file:Shell Code Blocks in Babel.md][Shell Code Blocks in Babel.md]]*: Dedicated Worg guide detailing shell evaluation across multiple shell binaries, asynchronous background evaluation, and remote system administration.
+
+* Quick Reference: The 5 Concerns of Org Babel
+
+A foundational principle documented in these skills is the five-way separation of concerns:
+
+#+ATTR_LATEX: :align |l|l|p{8cm}|
+| Concern | Key Header Arguments | Primary Role |
+|---|---|---|
+| *Execution* | =:session=, =:eval=, =:dir=, =:var=, =:cache= | Controls whether code executes, in which process, in what directory, and with what inputs. |
+| *Results* | =:results= (=value= vs =output=, format, type, handling) | Governs what is captured from execution and how it is formatted into the Org buffer. |
+| *Export* | =:exports= (=code=, =results=, =both=, =none=) | Governs what appears in generated human documents (HTML, LaTeX/PDF, Markdown). |
+| *Tangling* | =:tangle=, =:shebang=, =:noweb=, =:no-expand= | Governs what source code files are extracted to the filesystem. |
+| *Composition* | =:var=, =#+CALL:=, =<<noweb>>=, =org-sbe= | Governs how blocks exchange parameters and pipe results to each other or to tables. |
+
+* Quick Reference: Essential Keybindings
+
+| Keybinding | Command | Context |
+|---|---|---|
+| =C-c C-c= | =org-babel-execute-src-block= | With point inside a code block: runs the block and updates results. |
+| =C-c '= | =org-edit-special= | Opens block in major-mode edit buffer (with LSP & linters); =C-c '= to exit. |
+| =C-c C-v b= | =org-babel-execute-buffer= | Runs all code blocks in the notebook buffer sequentially. |
+| =C-c C-v s= | =org-babel-execute-subtree= | Runs all code blocks under the current heading. |
+| =C-c C-v t= | =org-babel-tangle= | Extracts tangled code blocks into external files on disk. |
+| =C-c C-v v= | =org-babel-expand-src-block= | Previews block expansion with all =:var= and noweb substitutions. |
+| =M-<down>= / =C-c C-z= | =org-babel-pop-to-session= | Switches focus directly to the interactive REPL buffer for this session. |
+| =C-c C-o= | =org-open-at-point= | Opens generated image or linked output file in external viewer or buffer. |
+| =C-c C-x C-v= | =org-toggle-inline-images= | Toggles display of inline images in the buffer. |
+
+* How to Use the Skills with AI Agents
+
+When interacting with an AI coding assistant (such as ECA), you can prompt the assistant to load or refer to these skills directly:
+
+- *For notebook creation:*
+  #+BEGIN_SRC text
+  "Refer to skills/org-babel-notebook/SKILL.md to structure and write an interactive computational notebook."
+  #+END_SRC
+- *For statistical analysis with R:*
+  #+BEGIN_SRC text
+  "Refer to skills/org-babel-r/SKILL.md for generating ggplot2 figures and formatting model tables with xtable."
+  #+END_SRC
+- *For DevOps runbooks or shell automation:*
+  #+BEGIN_SRC text
+  "Refer to skills/org-babel-shell/SKILL.md to construct an asynchronous remote deployment runbook using TRAMP."
+  #+END_SRC
+- *For code extraction and literate programming:*
+  #+BEGIN_SRC text
+  "Refer to skills/org-babel-literate-tangle/SKILL.md to configure Noweb modular assembly and batch tangling."
+  #+END_SRC
